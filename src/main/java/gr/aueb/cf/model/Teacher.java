@@ -2,6 +2,9 @@ package gr.aueb.cf.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "teachers")
 public class Teacher {
@@ -15,6 +18,9 @@ public class Teacher {
 
     //    @Column(name = "firstname", length = 255, nullable = true,unique = false)
     private String lastname;
+
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
+    private Set<Course> courses = new HashSet<>();
 
     public Teacher(){
 
@@ -48,6 +54,17 @@ public class Teacher {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public void addCourse(Course course){
+        if(courses == null) courses = new HashSet<>();
+         courses.add(course);
+         course.setTeacher(this);
+    }
+
+    public void removeCourse(Course course){
+        courses.remove(course);  // tbd override equals
+        course.setTeacher(null);
     }
 
     @Override

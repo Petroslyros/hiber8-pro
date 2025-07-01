@@ -2,6 +2,8 @@ package gr.aueb.cf.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -9,8 +11,11 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
     public Course() {
     }
@@ -35,6 +40,22 @@ public class Course {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Course course)) return false;
+        return Objects.equals(id, course.id);
+    }
+
+
 
     @Override
     public String toString() {
