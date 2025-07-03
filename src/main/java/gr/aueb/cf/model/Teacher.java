@@ -14,16 +14,16 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(name = "firstname", length = 255, nullable = true,unique = false)
+    //    @Column(name = "firstname", length = 255, nullable = true, unique = false)
     private String firstname;
 
-    //    @Column(name = "firstname", length = 255, nullable = true,unique = false)
+    //    @Column(name = "firstname", length = 255, nullable = true, unique = false)
     private String lastname;
 
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
     private Set<Course> courses = new HashSet<>();
 
-    public Teacher(){
+    public Teacher() {
 
     }
 
@@ -57,28 +57,29 @@ public class Teacher {
         this.lastname = lastname;
     }
 
-    public Set<Course> getCourses() {
+    protected Set<Course> getCourses() {
         return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
     }
 
     public Set<Course> getAllCourses() {
         return Collections.unmodifiableSet(courses);
     }
 
-    public void addCourse(Course course){
-        if(courses == null) courses = new HashSet<>();
-         courses.add(course);
-         course.setTeacher(this);
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 
-    public void removeCourse(Course course){
-        courses.remove(course);  // tbd override equals
+    public void addCourse(Course course) {
+        if (courses == null) courses = new HashSet<>();
+        this.courses.add(course);
+        course.setTeacher(this);
+    }
+
+    public void removeCourse(Course course) {
+        courses.remove(course);     // TBD override course equals
         course.setTeacher(null);
     }
+
 
     @Override
     public String toString() {

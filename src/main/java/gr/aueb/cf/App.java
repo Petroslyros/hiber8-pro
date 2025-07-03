@@ -45,9 +45,9 @@ public class App {
 
 
         // Select all teachers
-        String sql = "SELECT t FROM Teacher t";
-        List<Teacher> teachers = em.createQuery(sql, Teacher.class).getResultList();
-        teachers.forEach(System.out::println);
+//        String sql = "SELECT t FROM Teacher t";
+//        List<Teacher> teachers = em.createQuery(sql, Teacher.class).getResultList();
+//        teachers.forEach(System.out::println);
 
 
         //SELECT courses του teacher με επώνυμο 'Ανδρούτσος'
@@ -72,64 +72,78 @@ public class App {
         // όπως το :lastname (στην JPQL τα named params ξεκινάνε με :)
         // και στη συνέχεια να κάνουμε setParameter αφού έχει δημιουργηθεί το query (TypedQuery<>)
         // όπως παρακάτω
-        String sql2 = "SELECT c FROM Course c WHERE c.teacher.lastname = :lastname";
-        TypedQuery<Course> query = em.createQuery(sql2, Course.class);
-        List<Course> courses = query
-                .setParameter("lastname", "Ανδρούτσος")
-                .getResultList();
-        courses.forEach(System.out::println);
+//        String sql2 = "SELECT c FROM Course c WHERE c.teacher.lastname = :lastname";
+//        TypedQuery<Course> query = em.createQuery(sql2, Course.class);
+//        List<Course> courses = query
+//                .setParameter("lastname", andrLastname)
+//                .getResultList();
+//        courses.forEach(System.out::println);
 
-        //select teachers & course they teach
-//        String sql3 = "SELECT t,c FROM Teacher t JOIN t.courses c";
+//        // Select teachers & courses they teach
+//        String sql3 = "SELECT t, c FROM Teacher t JOIN t.courses c";
 //        List<Object[]> teachersCourses = em.createQuery(sql3, Object[].class).getResultList();
-//        for(Object[] objectArr : teachersCourses){
-//            System.out.println("Teacher : " + objectArr[0] + "\nCourse: " + objectArr[1]);
+//        for (Object[] objectArr : teachersCourses) {
+//            System.out.println("Teacher: " + objectArr[0] + "\nCourse: " + objectArr[1]);
 //        }
 
-//        String sql4 = "SELECT t.lastname, count(c) FROM Teacher JOIN t.courses c GROUP BY t";
+        // Teachers & το πλήθος των courses που διδάσκουν
+//        String sql4 = "SELECT t.lastname, count(c) FROM Teacher t JOIN t.courses c GROUP BY t";
 //        List<Object[]> teachersCoursesCount = em.createQuery(sql4, Object[].class).getResultList();
 //
 //        for (Object[] objectArr : teachersCoursesCount) {
-//            System.out.println("Teacher : " + objectArr[0] + "\nCourse: " + objectArr[1]);
+//            System.out.println("Teacher: " + objectArr[0] + ", Course count: " + objectArr[1]);
+//        }
 
-        //teachers & the count of courses they teach that are over 1 course
-//            String sql4 = "SELECT t.lastname, count(c) FROM Teacher JOIN t.courses c GROUP BY t HAVING count(c) > 1";
-//            List<Object[]> teachersCoursesCount = em.createQuery(sql4, Object[].class).getResultList();
-
-        //teachers & courses they teach that are over 1 course
-//        String sql4 = "SELECT t, c  FROM Teacher JOIN t.courses ORDER BY t.lastname ASC, c.title DESC";
+        // Teachers & το πλήθος των courses που διδάσκουν όταν είναι πάνω από 1 course
+//        String sql4 = "SELECT t.lastname, count(c) FROM Teacher t JOIN t.courses c GROUP BY t HAVING count(c) > 1";
 //        List<Object[]> teachersCoursesCount = em.createQuery(sql4, Object[].class).getResultList();
-        //loop
-
-        //Criteria API
-
-        //Select * courses
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<Course> query1 = cb.createQuery(Course.class); //Τι επιστρεφει
-//        Root<Course> root = query1.from(Course.class);               //Root Entity
-//        query1.select(root);
 //
-//        List<Course> courses1 = em.createQuery(query1).getResultList();
+//        for (Object[] objectArr : teachersCoursesCount) {
+//            System.out.println("Teacher: " + objectArr[0] + ", Course count: " + objectArr[1]);
+//        }
+
+        // Teachers & courses που διδάσκουν order by teacher lastname ASC & course title DESC
+//        String sql4 = "SELECT t, c FROM Teacher t JOIN t.courses c ORDER BY t.lastname ASC, c.title DESC";
+//        List<Object[]> teachersCourses = em.createQuery(sql4, Object[].class).getResultList();
+//
+//        for (Object[] objectArr : teachersCourses) {
+//            System.out.println("Teacher: " + objectArr[0] + ", Course count: " + objectArr[1]);
+//        }
+
+
+//       // Criteria API
+
+        //  Select all courses
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Course> query = cb.createQuery(Course.class);     // Τι επιστρέφει
+//        Root<Course> root = query.from(Course.class);                   // Root Entity
+//        query.select(root);
+//
+//        List<Course> courses = em.createQuery(query).getResultList();
 //        courses.forEach(System.out::println);
 
-        //select * teachers with lastname Ανδρουτσος
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<Teacher> query2 = cb.createQuery(Teacher.class);
-//        Root<Teacher> root = query2.from(Teacher.class);
-//        query2.select(root).where(cb.equal(root.get("lastname"), "Ανδρούτσος"));
-//        List<Teacher> teachers2 = em.createQuery(query2).getResultList();
-//        teachers2.forEach(System.out::println);
 
-        //sql injection safe
+        //  Select all teachers με επώνυμο Ανδρούτσος
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Teacher> query = cb.createQuery(Teacher.class);
+//        Root<Teacher> teacherRoot = query.from(Teacher.class);
+//
+//        query.select(teacherRoot).where(cb.equal(teacherRoot.get("lastname"), "Ανδρούτσος"));   // SQL Injection !!!
+//
+//        List<Teacher> teachers = em.createQuery(query).getResultList();
+//        teachers.forEach(System.out::println);
+
+
+        //  Select all teachers με επώνυμο Λύρος - SQL Injection safe
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Teacher> query2 = cb.createQuery(Teacher.class);
-        Root<Teacher> root = query2.from(Teacher.class);
+        CriteriaQuery<Teacher> query = cb.createQuery(Teacher.class);
+        Root<Teacher> teacherRoot = query.from(Teacher.class);
 
         ParameterExpression<String> lastnameParam = cb.parameter(String.class);
-        query2.select(root).where(cb.equal(root.get("lastname"), lastnameParam));
+        query.select(teacherRoot).where(cb.equal(teacherRoot.get("lastname"), lastnameParam));   // SQL Injection !!!
 
-        List<Teacher> teachers2 = em.createQuery(query2).setParameter(lastnameParam,"Λύρος").getResultList();
-        teachers2.forEach(System.out::println);
+        List<Teacher> teachers = em.createQuery(query).setParameter(lastnameParam, "Λύρος").getResultList();
+        teachers.forEach(System.out::println);
 
         em.getTransaction().commit();
 
@@ -137,3 +151,4 @@ public class App {
         emf.close();
     }
 }
+
